@@ -5,7 +5,7 @@ import {SingleShowType} from './single-show.type';
 @Component({
     selector: 'app-single-show',
     templateUrl: './single-show.component.html',
-    styleUrls: ['./single-show.component.css']
+    styleUrls: ['./single-show.component.scss']
 })
 export class SingleShowComponent implements OnInit {
     public singleShow: SingleShowType;

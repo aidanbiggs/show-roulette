@@ -39,7 +39,7 @@ export class SingleShowService {
         this.singleShow.originalTitle = data.original_title;
         this.singleShow.overview = data.overview;
         this.singleShow.popularity = data.popularity;
-        this.singleShow.posterPath = data.poster_path;
+        this.singleShow.posterPath = `http://image.tmdb.org/t/p/w342/${data.poster_path}`;
         this.singleShow.productionCompanies = ['test2'];
         this.singleShow.productionCountries = ['test3'];
         this.singleShow.releaseDate = data.release_date; // might need to be date?
