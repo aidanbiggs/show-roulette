@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SingleShowModule } from './home-screen/single-show/single-show.module';
 import { FilterShowsComponent } from './home-screen/filter-shows/filter-shows.component';
 import { ShowSpinnerComponent } from './home-screen/show-spinner/show-spinner.component';
+import {RandomShowGenerateService} from './home-screen/random-show-generate.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { ShowSpinnerComponent } from './home-screen/show-spinner/show-spinner.co
       HttpClientModule,
       SingleShowModule
   ],
-  providers: [],
+  providers: [RandomShowGenerateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

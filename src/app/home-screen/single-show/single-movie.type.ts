@@ -1,4 +1,4 @@
-export class SingleShowType {
+export class SingleMovieType {
     adult: boolean;
     backdropPath: string;
     belongsToCollection: {};
