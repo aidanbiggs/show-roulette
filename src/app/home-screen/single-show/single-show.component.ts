@@ -21,11 +21,15 @@ export class SingleShowComponent implements OnInit {
     }
 
     ngOnInit() {
-        const latestMovieId = this._randomShowGenerateService.getLatestMovie().subscribe(mergeMap((data) => {
-            return data.id;
-        }));
-        this._singleShowService.getSingleMovie(latestMovieId).subscribe(result => {
-            this.singleShow = result;
-        });
+        this._randomShowGenerateService.getLatestMovie().pipe(
+            mergeMap((response) => {
+                this._singleShowService.getSingleMovie(response.id);
+            })
+        ).subscribe();
+
+
+        // this._singleShowService.getSingleMovie(latestMovieId).subscribe(result => {
+        //     this.singleShow = result;
+        // });
     }
 }
