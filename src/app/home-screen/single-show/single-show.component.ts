@@ -4,6 +4,7 @@ import {SingleMovieType} from './single-movie.type';
 import {RandomShowGenerateService} from '../random-show-generate.service';
 import {mergeMap} from 'rxjs/operators';
 import {SingleTvType} from './single-tv.type';
+import {forkJoin, Observable} from 'rxjs';
 
 @Component({
     selector: 'app-single-show',
@@ -11,11 +12,12 @@ import {SingleTvType} from './single-tv.type';
     styleUrls: ['./single-show.component.scss']
 })
 export class SingleShowComponent implements OnInit {
-    public latestMovie: SingleMovieType;
-    public latestTv: SingleTvType;
-    private randomFilmId: number;
+    public latestMovie: Observable<SingleMovieType>;
+    public latestTv: Observable<SingleTvType>;
 
-        private _singleShowService: SingleShowService;
+    private showIds: number[] = [];
+    private randomFilmId: number;
+    private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
 
     constructor(singleShowService: SingleShowService, randomShowGenerateService: RandomShowGenerateService) {
@@ -24,28 +26,44 @@ export class SingleShowComponent implements OnInit {
     }
 
     ngOnInit() {
-        this._randomShowGenerateService.getLatestMovie().pipe(
+        this.latestMovie = this._randomShowGenerateService.getLatestMovie().pipe(
             mergeMap((value) => {
                 return this._singleShowService.getSingleMovie(value.id);
             })
-        ).subscribe(value => {
-            this.latestMovie = value;
-            this.randomFilmId = this.randomNumberBetween(0, this.latestMovie.id);
-        });
+        );
 
-        this._randomShowGenerateService.getLatestTv().pipe(
+        this.latestTv = this._randomShowGenerateService.getLatestTv().pipe(
             mergeMap((value) => {
                 return this._singleShowService.getSingleTv(value.id);
             })
-        ).subscribe(value => {
-            this.latestTv = value;
+        );
+
+        forkJoin([this.latestMovie, this.latestTv]).subscribe(results => {
+            const latestMovieId = results[0];
+            const latestTvId = results[1];
+            const numberOfMovies = this.randomNumberBetween(0, 10);
+            let randomMovieId;
+            let randomTvId;
+
+            for (let i = 0; this.showIds.length < numberOfMovies;) {
+                randomMovieId = this.randomNumberBetween(0, latestMovieId);
+
+                if (!this.showIds.includes(randomMovieId)) {
+                    this.showIds[i] = this.randomNumberBetween(0, latestMovieId);
+                    i++;
+                }
+            }
+
+            for (let j = numberOfMovies; this.showIds.length < 10;) {
+                randomTvId = this.randomNumberBetween(0, latestTvId);
+
+                if (!this.showIds.includes(randomTvId)) {
+                    this.showIds[j] = this.randomNumberBetween(0, latestTvId);
+                    j++;
+                }
+            }
         });
-
-        const numberOfMovies = this.randomNumberBetween(0, 10);
-        const numberOfSeries = 10 - numberOfMovies;
-        console.log(this.randomFilmId);
-
-
+        console.log('dicks');
     }
 
     private randomNumberBetween(min, max) {
