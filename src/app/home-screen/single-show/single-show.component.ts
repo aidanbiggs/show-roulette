@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {SingleShowService} from './single-show.service';
 import {SingleMovieType} from './single-movie.type';
 import {RandomShowGenerateService} from '../random-show-generate.service';
-import {map, mergeMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
+import {SingleTvType} from './single-tv.type';
 
 @Component({
     selector: 'app-single-show',
@@ -10,9 +11,11 @@ import {map, mergeMap} from 'rxjs/operators';
     styleUrls: ['./single-show.component.scss']
 })
 export class SingleShowComponent implements OnInit {
-    public singleShow: SingleMovieType;
+    public latestMovie: SingleMovieType;
+    public latestTv: SingleTvType;
+    private randomFilmId: number;
 
-    private _singleShowService: SingleShowService;
+        private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
 
     constructor(singleShowService: SingleShowService, randomShowGenerateService: RandomShowGenerateService) {
@@ -22,14 +25,30 @@ export class SingleShowComponent implements OnInit {
 
     ngOnInit() {
         this._randomShowGenerateService.getLatestMovie().pipe(
-            mergeMap((response) => {
-                this._singleShowService.getSingleMovie(response.id);
+            mergeMap((value) => {
+                return this._singleShowService.getSingleMovie(value.id);
             })
-        ).subscribe();
+        ).subscribe(value => {
+            this.latestMovie = value;
+            this.randomFilmId = this.randomNumberBetween(0, this.latestMovie.id);
+        });
+
+        this._randomShowGenerateService.getLatestTv().pipe(
+            mergeMap((value) => {
+                return this._singleShowService.getSingleTv(value.id);
+            })
+        ).subscribe(value => {
+            this.latestTv = value;
+        });
+
+        const numberOfMovies = this.randomNumberBetween(0, 10);
+        const numberOfSeries = 10 - numberOfMovies;
+        console.log(this.randomFilmId);
 
 
-        // this._singleShowService.getSingleMovie(latestMovieId).subscribe(result => {
-        //     this.singleShow = result;
-        // });
+    }
+
+    private randomNumberBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }

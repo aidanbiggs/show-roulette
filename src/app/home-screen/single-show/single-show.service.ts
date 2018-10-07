@@ -20,10 +20,18 @@ export class SingleShowService {
         this._httpClient = httpClient;
     }
 
-    public getSingleMovie(id: Observable<number>): Observable<SingleMovieType> {
+    public getSingleMovie(id: number): Observable<SingleMovieType> {
         return this._httpClient.get(`https://api.themoviedb.org/3/movie/${id}?api_key=${AppConstants.API_KEY}`)
             .pipe(
                 map((response) => this.mapSingleMovie(response)
+                )
+            );
+    }
+
+    public getSingleTv(id: number): Observable<SingleTvType> {
+        return this._httpClient.get(`https://api.themoviedb.org/3/tv/${id}?api_key=${AppConstants.API_KEY}`)
+            .pipe(
+                map((response) => this.mapSingleTv(response)
                 )
             );
     }
@@ -42,7 +50,7 @@ export class SingleShowService {
         this.singleMovie.originalTitle = data.original_title;
         this.singleMovie.overview = data.overview;
         this.singleMovie.popularity = data.popularity;
-        this.singleMovie.posterPath = `http://image.tmdb.org/t/p/w342/${data.poster_path}`;
+        this.singleMovie.posterPath = data.poster_path ? `http://image.tmdb.org/t/p/w342/${data.poster_path}` : 'https://vignette.wikia.nocookie.net/undertale-rho/images/5/5f/Placeholder.jpg/revision/latest?cb=20180213155916';
         this.singleMovie.productionCompanies = ['test2'];
         this.singleMovie.productionCountries = ['test3'];
         this.singleMovie.releaseDate = data.release_date; // might need to be date?

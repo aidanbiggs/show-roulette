@@ -1,10 +1,10 @@
-<div class="row" *ngIf ="singleShow">
+<div class="row" *ngIf ="latestMovie">
     <div class="col-3">
-        <img class ="show-poster m-4" src="{{singleShow.posterPath}}">
+        <img class ="show-poster m-4" src="{{latestMovie.posterPath}}">
     </div>
     <div class="col-9 text-center">
-        <h2 class="mt-3">{{singleShow.title}}</h2>
-        <h4 class="mt-2 font-italic">{{singleShow.tagline}}</h4>
-        <h5 class="mt-4">{{singleShow.overview}}</h5>
+        <h2 class="mt-3">{{latestMovie.title}}</h2>
+        <h4 class="mt-2 font-italic">{{latestMovie.tagline}}</h4>
+        <h5 class="mt-4">{{latestMovie.overview}}</h5>
     </div>
 </div>
