@@ -5,6 +5,7 @@ import {RandomShowGenerateService} from '../random-show-generate.service';
 import {mergeMap} from 'rxjs/operators';
 import {SingleTvType} from './single-tv.type';
 import {forkJoin, Observable} from 'rxjs';
+import {SingleShowType} from './single-show.type';
 
 @Component({
     selector: 'app-single-show',
@@ -15,7 +16,7 @@ export class SingleShowComponent implements OnInit {
     public latestMovie: Observable<SingleMovieType>;
     public latestTv: Observable<SingleTvType>;
 
-    private showIds: number[] = [];
+    private showIds: [SingleShowType];
     private randomFilmId: number;
     private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
@@ -39,8 +40,8 @@ export class SingleShowComponent implements OnInit {
         );
 
         forkJoin([this.latestMovie, this.latestTv]).subscribe(results => {
-            const latestMovieId = results[0];
-            const latestTvId = results[1];
+            const latestMovieId = results[0].id;
+            const latestTvId = results[1].id;
             const numberOfMovies = this.randomNumberBetween(0, 10);
             let randomMovieId;
             let randomTvId;
@@ -49,7 +50,9 @@ export class SingleShowComponent implements OnInit {
                 randomMovieId = this.randomNumberBetween(0, latestMovieId);
 
                 if (!this.showIds.includes(randomMovieId)) {
-                    this.showIds[i] = this.randomNumberBetween(0, latestMovieId);
+                    this.showIds[i] = {
+                        id: this.randomNumberBetween(0, latestMovieId), showType: 'movie'
+                    };
                     i++;
                 }
             }
@@ -58,12 +61,14 @@ export class SingleShowComponent implements OnInit {
                 randomTvId = this.randomNumberBetween(0, latestTvId);
 
                 if (!this.showIds.includes(randomTvId)) {
-                    this.showIds[j] = this.randomNumberBetween(0, latestTvId);
+                    this.showIds[j] = {
+                        id: this.randomNumberBetween(0, latestTvId), showType: 'tv'
+                    };
                     j++;
                 }
             }
         });
-        console.log('dicks');
+        console.log(this.showIds);
     }
 
     private randomNumberBetween(min, max) {
