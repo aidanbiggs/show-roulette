@@ -16,7 +16,7 @@ export class SingleShowComponent implements OnInit {
     public latestMovie: Observable<SingleMovieType>;
     public latestTv: Observable<SingleTvType>;
 
-    private showIds: [SingleShowType];
+    private showIds: Array <SingleShowType> = [];
     private randomFilmId: number;
     private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
@@ -51,24 +51,24 @@ export class SingleShowComponent implements OnInit {
 
                 if (!this.showIds.includes(randomMovieId)) {
                     this.showIds[i] = {
-                        id: this.randomNumberBetween(0, latestMovieId), showType: 'movie'
+                        id: this.randomNumberBetween(0, latestMovieId), isMovie: true
                     };
+                    this._singleShowService.checkUrlExists(this.showIds[i]);
                     i++;
                 }
             }
 
             for (let j = numberOfMovies; this.showIds.length < 10;) {
                 randomTvId = this.randomNumberBetween(0, latestTvId);
-
+                // this._singleShowService.getSingleTv(randomTvId)
                 if (!this.showIds.includes(randomTvId)) {
                     this.showIds[j] = {
-                        id: this.randomNumberBetween(0, latestTvId), showType: 'tv'
+                        id: this.randomNumberBetween(0, latestTvId),  isMovie: false
                     };
                     j++;
                 }
             }
         });
-        console.log(this.showIds);
     }
 
     private randomNumberBetween(min, max) {

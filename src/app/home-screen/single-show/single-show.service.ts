@@ -1,10 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {SingleMovieType} from './single-movie.type';
 import {map} from 'rxjs/operators';
 import {AppConstants} from '../../app.consts';
 import {SingleTvType} from './single-tv.type';
+import {SingleShowType} from './single-show.type';
 
 @Injectable({
     providedIn: 'root'
@@ -68,36 +69,49 @@ export class SingleShowService {
     }
 
     mapSingleTv(data: any): SingleTvType {
-       this.singleTv.backdropPath = data.backdrop_path;
-       this.singleTv.createdBy = data.created_by;
-       this.singleTv.episodeRunTime = data.episode_run_time;
-       this.singleTv.firstAirDate = data.first_air_date;
-       this.singleTv.genres = data.genres;
-       this.singleTv.homepage = data.homepage;
-       this.singleTv.id = data.id;
-       this.singleTv.inProduction = data.in_production;
-       this.singleTv.languages = data.languages;
-       this.singleTv.lastEpisodeToAir = data.last_episode_to_air;
-       this.singleTv.name = data.name;
-       this.singleTv.nextEpisodeToAir = data.next_episode_to_air;
-       this.singleTv.networks = data.networks;
-       this.singleTv.numberOfEpisodes = data.number_of_episodes;
-       this.singleTv.numberOfSeasons = data.number_of_seasons;
-       this.singleTv.originOfCountry = data.origin_of_country;
-       this.singleTv.originalLanguage = data.original_language;
-       this.singleTv.originalName = data.original_name;
-       this.singleTv.overview = data.overview;
-       this.singleTv.popularity = data.popularity;
-       this.singleTv.posterPath = data.poster_path;
-       this.singleTv.productionCompanies = data.production_companies;
-       this.singleTv.seasons = data.seasons;
-       this.singleTv.status = data.status;
-       this.singleTv.type = data.type;
-       this.singleTv.voteAverage = data.vote_average;
-       this.singleTv.voteCount = data.vote_count;
+        this.singleTv.backdropPath = data.backdrop_path;
+        this.singleTv.createdBy = data.created_by;
+        this.singleTv.episodeRunTime = data.episode_run_time;
+        this.singleTv.firstAirDate = data.first_air_date;
+        this.singleTv.genres = data.genres;
+        this.singleTv.homepage = data.homepage;
+        this.singleTv.id = data.id;
+        this.singleTv.inProduction = data.in_production;
+        this.singleTv.languages = data.languages;
+        this.singleTv.lastEpisodeToAir = data.last_episode_to_air;
+        this.singleTv.name = data.name;
+        this.singleTv.nextEpisodeToAir = data.next_episode_to_air;
+        this.singleTv.networks = data.networks;
+        this.singleTv.numberOfEpisodes = data.number_of_episodes;
+        this.singleTv.numberOfSeasons = data.number_of_seasons;
+        this.singleTv.originOfCountry = data.origin_of_country;
+        this.singleTv.originalLanguage = data.original_language;
+        this.singleTv.originalName = data.original_name;
+        this.singleTv.overview = data.overview;
+        this.singleTv.popularity = data.popularity;
+        this.singleTv.posterPath = data.poster_path;
+        this.singleTv.productionCompanies = data.production_companies;
+        this.singleTv.seasons = data.seasons;
+        this.singleTv.status = data.status;
+        this.singleTv.type = data.type;
+        this.singleTv.voteAverage = data.vote_average;
+        this.singleTv.voteCount = data.vote_count;
 
-       return this.singleTv;
+        return this.singleTv;
 
+    }
+
+    public checkUrlExists(singleShow: SingleShowType) {
+        console.log('hello');
+        this._httpClient.get(`https://api.themoviedb.org/3/movie/${singleShow.id}?api_key=${AppConstants.API_KEY}`)
+             .pipe(
+                 map((result) => {
+                    console.log(result);
+                 }),
+                 ((error) => {
+                        return Observable.(false);
+                 })
+             ).subscribe();
     }
 }
 
