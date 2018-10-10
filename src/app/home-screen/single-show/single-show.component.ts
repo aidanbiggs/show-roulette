@@ -50,17 +50,19 @@ export class SingleShowComponent implements OnInit {
                 randomMovieId = this.randomNumberBetween(0, latestMovieId);
 
                 if (!this.showIds.includes(randomMovieId)) {
-                    this.showIds[i] = {
-                        id: this.randomNumberBetween(0, latestMovieId), isMovie: true
-                    };
-                    this._singleShowService.checkUrlExists(this.showIds[i]);
-                    i++;
+                    if (this._singleShowService.checkUrlExists(randomMovieId) === true) {
+                        this.showIds[i] = {
+                            id: randomMovieId, isMovie: true
+                        };
+                        i++;
+                    }
                 }
             }
+            console.log('number of movies', numberOfMovies);
+            console.log('list id length', this.showIds.length);
 
             for (let j = numberOfMovies; this.showIds.length < 10;) {
                 randomTvId = this.randomNumberBetween(0, latestTvId);
-                // this._singleShowService.getSingleTv(randomTvId)
                 if (!this.showIds.includes(randomTvId)) {
                     this.showIds[j] = {
                         id: this.randomNumberBetween(0, latestTvId),  isMovie: false
