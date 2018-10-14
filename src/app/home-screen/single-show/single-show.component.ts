@@ -17,7 +17,6 @@ export class SingleShowComponent implements OnInit {
     public latestTv: Observable<SingleTvType>;
 
     private showIds: Array <SingleShowType> = [];
-    private randomFilmId: number;
     private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
 
@@ -50,7 +49,10 @@ export class SingleShowComponent implements OnInit {
                 randomMovieId = this.randomNumberBetween(0, latestMovieId);
 
                 if (!this.showIds.includes(randomMovieId)) {
-                    if (this._singleShowService.checkUrlExists(randomMovieId) === true) {
+                    this._singleShowService.urlExists(randomMovieId).subscribe(data => {
+                        console.log('Hi Bethan', data);
+                    });
+                    if (this._singleShowService.urlExists(randomMovieId)) {
                         this.showIds[i] = {
                             id: randomMovieId, isMovie: true
                         };
@@ -58,8 +60,9 @@ export class SingleShowComponent implements OnInit {
                     }
                 }
             }
-            console.log('number of movies', numberOfMovies);
-            console.log('list id length', this.showIds.length);
+
+            console.log('showIds = ', this.showIds.length);
+            console.log(' numberOfMovies= ', numberOfMovies);
 
             for (let j = numberOfMovies; this.showIds.length < 10;) {
                 randomTvId = this.randomNumberBetween(0, latestTvId);

@@ -1,13 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, of, throwError} from 'rxjs';
+import {Observable} from 'rxjs';
 import {SingleMovieType} from './single-movie.type';
-import {catchError, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {AppConstants} from '../../app.consts';
 import {SingleTvType} from './single-tv.type';
-import {SingleShowType} from './single-show.type';
 import 'rxjs-compat/add/observable/of';
-import {error} from 'util';
+import 'rxjs/add/operator/catch';
 
 @Injectable({
     providedIn: 'root'
@@ -103,19 +102,14 @@ export class SingleShowService {
 
     }
 
-    public checkUrlExists(singleShow: SingleShowType): boolean {
-        let hasError = false;
-        const urlCheck = this._httpClient.get(`https://api.themoviedb.org/3/movie/${singleShow.id}?api_key=${AppConstants.API_KEY}`)
-             .pipe(
-                 catchError((errorMessage) => {
-                     hasError = true;
-                     console.log('errored');
-                     return Observable.of(null);
-                 })
-             ).subscribe();
-
-        urlCheck.unsubscribe();
-        return hasError;
+    public urlExists(singleShowId: number): Observable<boolean> {
+        return this._httpClient.get(`https://api.themoviedb.org/3/movie/${singleShowId}?api_key=${AppConstants.API_KEY}`).pipe(map(data => {
+            console.log('success', data);
+            return true;
+        })).catch((err, caught) => {
+            console.log('error');
+            return Observable.of(false);
+        });
     }
 }
 
