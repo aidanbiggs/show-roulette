@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SingleShowService} from './single-show.service';
 import {SingleMovieType} from './single-movie.type';
 import {RandomShowGenerateService} from '../random-show-generate.service';
-import {mergeMap} from 'rxjs/operators';
+import {expand, mergeMap} from 'rxjs/operators';
 import {SingleTvType} from './single-tv.type';
 import {forkJoin, Observable} from 'rxjs';
 import {SingleShowType} from './single-show.type';
@@ -16,7 +16,7 @@ export class SingleShowComponent implements OnInit {
     public latestMovie: Observable<SingleMovieType>;
     public latestTv: Observable<SingleTvType>;
 
-    private showIds: Array <SingleShowType> = [];
+    private showIds: Array<SingleShowType> = [];
     private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
 
@@ -42,41 +42,35 @@ export class SingleShowComponent implements OnInit {
             const latestMovieId = results[0].id;
             const latestTvId = results[1].id;
             const numberOfMovies = this.randomNumberBetween(0, 10);
-            let randomMovieId;
-            let randomTvId;
+            let idArray: Array<number> = [];
+            // for (let i = 0; i < numberOfMovies) {
+            this._singleShowService.urlExists(latestMovieId).subscribe();
+            //
+            // let notifier: Observable<any>
+            // let currentIndex = 0;
+            //
+            // this._singleShowService.urlExists(latestMovieId).pipe(takeUntil(notifier)).subscribe(data => {
+            //     if (this.showIds.length === 10) {
+            //         if (!isNaN(data)) {
+            //             console.log('data = ', data);
+            //             this.showIds[currentIndex] = {
+            //                 id: data, isMovie: true
+            //             };
+            //             currentIndex++;
+            //         }
+            //     }
+            // });
+            // if (this._singleShowService.urlExists(randomMovieId)) {
+            //     this.showIds[i] = {
+            //         id: randomMovieId, isMovie: true
+            //     };
+            //     i++;
+            // }
 
-            for (let i = 0; this.showIds.length < numberOfMovies;) {
-                randomMovieId = this.randomNumberBetween(0, latestMovieId);
-
-                if (!this.showIds.includes(randomMovieId)) {
-                    this._singleShowService.urlExists(randomMovieId).subscribe(data => {
-                        console.log('Hi Bethan', data);
-                    });
-                    if (this._singleShowService.urlExists(randomMovieId)) {
-                        this.showIds[i] = {
-                            id: randomMovieId, isMovie: true
-                        };
-                        i++;
-                    }
-                }
-            }
-
-            console.log('showIds = ', this.showIds.length);
-            console.log(' numberOfMovies= ', numberOfMovies);
-
-            for (let j = numberOfMovies; this.showIds.length < 10;) {
-                randomTvId = this.randomNumberBetween(0, latestTvId);
-                if (!this.showIds.includes(randomTvId)) {
-                    this.showIds[j] = {
-                        id: this.randomNumberBetween(0, latestTvId),  isMovie: false
-                    };
-                    j++;
-                }
-            }
         });
     }
 
-    private randomNumberBetween(min, max) {
+    public randomNumberBetween(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }

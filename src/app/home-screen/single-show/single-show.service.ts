@@ -102,14 +102,20 @@ export class SingleShowService {
 
     }
 
-    public urlExists(singleShowId: number): Observable<boolean> {
-        return this._httpClient.get(`https://api.themoviedb.org/3/movie/${singleShowId}?api_key=${AppConstants.API_KEY}`).pipe(map(data => {
-            console.log('success', data);
-            return true;
-        })).catch((err, caught) => {
-            console.log('error');
-            return Observable.of(false);
+    public urlExists(latestMovieId: number): Observable<number> {
+        let singleShowId: number;
+        singleShowId = this.randomNumberBetween(0, latestMovieId);
+        this.getSingleMovie(singleShowId).subscribe((data) => {
+            if (data) {
+                console.log(data);
+                return Observable.of(singleShowId);
+            }
         });
+        return Observable.of(-1);
+    }
+
+    public randomNumberBetween(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }
 
