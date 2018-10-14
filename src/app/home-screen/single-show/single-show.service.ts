@@ -107,7 +107,7 @@ export class SingleShowService {
         singleShowId = this.randomNumberBetween(0, latestMovieId);
         this.getSingleMovie(singleShowId).subscribe((data) => {
             if (data) {
-                console.log(data);
+                console.log('data is =', data);
                 return Observable.of(singleShowId);
             }
         });

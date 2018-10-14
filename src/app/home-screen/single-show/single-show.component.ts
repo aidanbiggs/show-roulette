@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SingleShowService} from './single-show.service';
 import {SingleMovieType} from './single-movie.type';
 import {RandomShowGenerateService} from '../random-show-generate.service';
-import {expand, mergeMap} from 'rxjs/operators';
+import {mergeMap, takeUntil, takeWhile} from 'rxjs/operators';
 import {SingleTvType} from './single-tv.type';
 import {forkJoin, Observable} from 'rxjs';
 import {SingleShowType} from './single-show.type';
@@ -44,7 +44,12 @@ export class SingleShowComponent implements OnInit {
             const numberOfMovies = this.randomNumberBetween(0, 10);
             let idArray: Array<number> = [];
             // for (let i = 0; i < numberOfMovies) {
-            this._singleShowService.urlExists(latestMovieId).subscribe();
+            this._singleShowService.urlExists(latestMovieId).pipe(takeWhile(() => idArray.length < 10))
+                .subscribe((data) => {
+                    if (data !== -1 && idArray.length !== 10) {
+                        idArray.push(data);
+                    }
+                });
             //
             // let notifier: Observable<any>
             // let currentIndex = 0;
