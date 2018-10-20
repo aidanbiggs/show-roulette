@@ -7,6 +7,7 @@ import {AppConstants} from '../../app.consts';
 import {SingleTvType} from './single-tv.type';
 import 'rxjs-compat/add/observable/of';
 import 'rxjs/add/operator/catch';
+import {SingleShowType} from './single-show.type';
 
 @Injectable({
     providedIn: 'root'
@@ -101,19 +102,46 @@ export class SingleShowService {
 
     }
 
-    public urlExists(latestMovieId: number): Observable<number> {
+    public getValidMovie(latestMovieId: number): Observable<SingleShowType> {
         let singleShowId: number;
         singleShowId = this.randomNumberBetween(0, latestMovieId);
         return this.getSingleMovie(singleShowId)
             .pipe(
                 map((data) => {
                     if (data) {
-                        return singleShowId;
+                        return {
+                            id : singleShowId,
+                            isMovie : true
+                        };
                     }
                 }), catchError((error) => {
                     if (error.status === 404) {
-                        return this.urlExists(latestMovieId);
+                        return this.getValidMovie(latestMovieId);
                     }
+
+                    return null;
+                })
+            );
+    }
+
+    public getValidSeries(latestMovieId: number): Observable<SingleShowType> {
+        let singleShowId: number;
+        singleShowId = this.randomNumberBetween(0, latestMovieId);
+        return this.getSingleTv(singleShowId)
+            .pipe(
+                map((data) => {
+                    if (data) {
+                        return {
+                            id : singleShowId,
+                            isMovie : false
+                        };
+                    }
+                }), catchError((error) => {
+                    if (error.status === 404) {
+                        return this.getValidMovie(latestMovieId);
+                    }
+
+                    return null;
                 })
             );
     }

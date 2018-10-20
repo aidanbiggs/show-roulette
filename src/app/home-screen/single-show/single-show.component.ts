@@ -6,6 +6,7 @@ import {mergeMap} from 'rxjs/operators';
 import {SingleTvType} from './single-tv.type';
 import {forkJoin, Observable} from 'rxjs';
 import {SingleShowType} from './single-show.type';
+import {AppConstants} from '../../app.consts';
 
 @Component({
     selector: 'app-single-show',
@@ -40,19 +41,28 @@ export class SingleShowComponent implements OnInit {
 
         forkJoin([this.latestMovie, this.latestTv]).subscribe(results => {
             const latestMovieId = results[0].id;
-            const latestTvId = results[1].id;
+            const latestSeriesId = results[1].id;
             const numberOfMovies = this.randomNumberBetween(0, 10);
             const idArray: Array<number> = [];
-            const calls = [];
-            for (let i = 0; i < 10; i++) {
-                calls.push(this._singleShowService.urlExists(latestMovieId));
+            this.getShowIds(numberOfMovies, latestMovieId, latestSeriesId, idArray);
+        });
+    }
+
+    private getShowIds(numberOfMovies, latestMovieId, latestSeriesId, idArray: Array<number>) {
+        const calls = [];
+
+        for (let i = 0; i < AppConstants.NUMBER_OF_SHOWS; i++) {
+            if (i < numberOfMovies) {
+                calls.push(this._singleShowService.getValidMovie(latestMovieId));
+            } else {
+                calls.push(this._singleShowService.getValidSeries(latestSeriesId));
             }
-            forkJoin(...calls).subscribe((data) => {
-                if (data !== -1 && idArray.length < 10) {
-                    idArray.push(...data);
-                }
-                console.log(idArray);
-            });
+        }
+        forkJoin(...calls).subscribe((data) => {
+            if (data !== null) {
+                idArray.push(...data);
+            }
+            console.log(idArray);
         });
     }
 
