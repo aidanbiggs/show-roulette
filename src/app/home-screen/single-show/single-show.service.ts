@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {SingleMovieType} from './single-movie.type';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {AppConstants} from '../../app.consts';
 import {SingleTvType} from './single-tv.type';
 import 'rxjs-compat/add/observable/of';
@@ -16,7 +16,6 @@ export class SingleShowService {
     public readonly singleTv: SingleTvType = new SingleTvType();
 
     private _httpClient: HttpClient;
-
 
     constructor(httpClient: HttpClient) {
         this._httpClient = httpClient;
@@ -105,13 +104,18 @@ export class SingleShowService {
     public urlExists(latestMovieId: number): Observable<number> {
         let singleShowId: number;
         singleShowId = this.randomNumberBetween(0, latestMovieId);
-        this.getSingleMovie(singleShowId).subscribe((data) => {
-            if (data) {
-                console.log('data is =', data);
-                return Observable.of(singleShowId);
-            }
-        });
-        return Observable.of(-1);
+        return this.getSingleMovie(singleShowId)
+            .pipe(
+                map((data) => {
+                    if (data) {
+                        return singleShowId;
+                    }
+                }), catchError((error) => {
+                    if (error.status === 404) {
+                        return this.urlExists(latestMovieId);
+                    }
+                })
+            );
     }
 
     public randomNumberBetween(min, max) {
