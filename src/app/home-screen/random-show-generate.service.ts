@@ -5,7 +5,7 @@ import {map, tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {SingleShowService} from './single-show/single-show.service';
-import {SingleTvType} from './single-show/single-tv.type';
+import {SingleSeriesType} from './single-show/single-series.type';
 
 @Injectable()
 export class RandomShowGenerateService {
@@ -24,9 +24,9 @@ export class RandomShowGenerateService {
         );
     }
 
-    public getLatestTv(): Observable<SingleTvType> {
+    public getLatestTv(): Observable<SingleSeriesType> {
         return this._httpClient.get(`https://api.themoviedb.org/3/tv/latest?api_key=${AppConstants.API_KEY}`).pipe(
-            map((response) => this._singleShowService.mapSingleTv(response)
+            map((response) => this._singleShowService.mapSingleSeries(response)
             )
         );
     }

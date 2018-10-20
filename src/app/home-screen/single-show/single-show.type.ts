@@ -1,4 +1,7 @@
 export class SingleShowType {
     id: number;
-    isMovie: boolean;
+    title: string;
+    posterPath: string;
+    overview: string;
+    tagline: string;
 }

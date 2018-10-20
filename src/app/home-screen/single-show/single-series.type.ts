@@ -1,4 +1,4 @@
-export class SingleTvType {
+export class SingleSeriesType {
     backdropPath: string;
     createdBy: [string];
     episodeRunTime: [number];

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, forkJoin} from 'rxjs';
 import {SingleMovieType} from './single-movie.type';
 import {catchError, map} from 'rxjs/operators';
 import {AppConstants} from '../../app.consts';
-import {SingleTvType} from './single-tv.type';
+import {SingleSeriesType} from './single-series.type';
 import 'rxjs-compat/add/observable/of';
 import 'rxjs/add/operator/catch';
 import {SingleShowType} from './single-show.type';
@@ -13,9 +13,6 @@ import {SingleShowType} from './single-show.type';
     providedIn: 'root'
 })
 export class SingleShowService {
-    public readonly singleMovie: SingleMovieType = new SingleMovieType;
-    public readonly singleTv: SingleTvType = new SingleTvType();
-
     private _httpClient: HttpClient;
 
     constructor(httpClient: HttpClient) {
@@ -30,89 +27,100 @@ export class SingleShowService {
             );
     }
 
-    public getSingleTv(id: number): Observable<SingleTvType> {
+    public getSingleTv(id: number): Observable<SingleSeriesType> {
         return this._httpClient.get(`https://api.themoviedb.org/3/tv/${id}?api_key=${AppConstants.API_KEY}`)
             .pipe(
-                map((response) => this.mapSingleTv(response)
+                map((response) => this.mapSingleSeries(response)
                 )
             );
     }
 
     public mapSingleMovie(data: any): SingleMovieType {
+        const singleMovie: SingleMovieType = new SingleMovieType();
+        singleMovie.adult = data.adult;
+        singleMovie.backdropPath = data.backdrop_path;
+        singleMovie.belongsToCollection = {};
+        singleMovie.budget = data.budget;
+        singleMovie.genres = ['test1'];
+        singleMovie.homepage = data.homepage;
+        singleMovie.id = data.id;
+        singleMovie.imdbId = data.imdb_id;
+        singleMovie.originalLanguage = data.original_language;
+        singleMovie.originalTitle = data.original_title;
+        singleMovie.overview = data.overview;
+        singleMovie.popularity = data.popularity;
+        singleMovie.posterPath = data.poster_path ? `http://image.tmdb.org/t/p/w342/${data.poster_path}` : 'https://vignette.wikia.nocookie.net/undertale-rho/images/5/5f/Placeholder.jpg/revision/latest?cb=20180213155916';
+        singleMovie.productionCompanies = ['test2'];
+        singleMovie.productionCountries = ['test3'];
+        singleMovie.releaseDate = data.release_date; // might need to be date?
+        singleMovie.revenue = data.revenue;
+        singleMovie.runtime = data.runtime;
+        singleMovie.spokenLanguages = ['test4'];
+        singleMovie.status = data.status;
+        singleMovie.tagline = data.tagline;
+        singleMovie.title = data.title;
+        singleMovie.video = data.video;
+        singleMovie.voteAverage = data.vote_average;
+        singleMovie.voteCount = data.vote_count;
 
-        this.singleMovie.adult = data.adult;
-        this.singleMovie.backdropPath = data.backdrop_path;
-        this.singleMovie.belongsToCollection = {};
-        this.singleMovie.budget = data.budget;
-        this.singleMovie.genres = ['test1'];
-        this.singleMovie.homepage = data.homepage;
-        this.singleMovie.id = data.id;
-        this.singleMovie.imdbId = data.imdb_id;
-        this.singleMovie.originalLanguage = data.original_language;
-        this.singleMovie.originalTitle = data.original_title;
-        this.singleMovie.overview = data.overview;
-        this.singleMovie.popularity = data.popularity;
-        this.singleMovie.posterPath = data.poster_path ? `http://image.tmdb.org/t/p/w342/${data.poster_path}` : 'https://vignette.wikia.nocookie.net/undertale-rho/images/5/5f/Placeholder.jpg/revision/latest?cb=20180213155916';
-        this.singleMovie.productionCompanies = ['test2'];
-        this.singleMovie.productionCountries = ['test3'];
-        this.singleMovie.releaseDate = data.release_date; // might need to be date?
-        this.singleMovie.revenue = data.revenue;
-        this.singleMovie.runtime = data.runtime;
-        this.singleMovie.spokenLanguages = ['test4'];
-        this.singleMovie.status = data.status;
-        this.singleMovie.tagline = data.tagline;
-        this.singleMovie.title = data.title;
-        this.singleMovie.video = data.video;
-        this.singleMovie.voteAverage = data.vote_average;
-        this.singleMovie.voteCount = data.vote_count;
-
-        return this.singleMovie;
+        return singleMovie;
     }
 
-    mapSingleTv(data: any): SingleTvType {
-        this.singleTv.backdropPath = data.backdrop_path;
-        this.singleTv.createdBy = data.created_by;
-        this.singleTv.episodeRunTime = data.episode_run_time;
-        this.singleTv.firstAirDate = data.first_air_date;
-        this.singleTv.genres = data.genres;
-        this.singleTv.homepage = data.homepage;
-        this.singleTv.id = data.id;
-        this.singleTv.inProduction = data.in_production;
-        this.singleTv.languages = data.languages;
-        this.singleTv.lastEpisodeToAir = data.last_episode_to_air;
-        this.singleTv.name = data.name;
-        this.singleTv.nextEpisodeToAir = data.next_episode_to_air;
-        this.singleTv.networks = data.networks;
-        this.singleTv.numberOfEpisodes = data.number_of_episodes;
-        this.singleTv.numberOfSeasons = data.number_of_seasons;
-        this.singleTv.originOfCountry = data.origin_of_country;
-        this.singleTv.originalLanguage = data.original_language;
-        this.singleTv.originalName = data.original_name;
-        this.singleTv.overview = data.overview;
-        this.singleTv.popularity = data.popularity;
-        this.singleTv.posterPath = data.poster_path;
-        this.singleTv.productionCompanies = data.production_companies;
-        this.singleTv.seasons = data.seasons;
-        this.singleTv.status = data.status;
-        this.singleTv.type = data.type;
-        this.singleTv.voteAverage = data.vote_average;
-        this.singleTv.voteCount = data.vote_count;
+    mapSingleSeries(data: any): SingleSeriesType {
+        const singleSeries: SingleSeriesType = new SingleSeriesType();
 
-        return this.singleTv;
+        singleSeries.backdropPath = data.backdrop_path;
+        singleSeries.createdBy = data.created_by;
+        singleSeries.episodeRunTime = data.episode_run_time;
+        singleSeries.firstAirDate = data.first_air_date;
+        singleSeries.genres = data.genres;
+        singleSeries.homepage = data.homepage;
+        singleSeries.id = data.id;
+        singleSeries.inProduction = data.in_production;
+        singleSeries.languages = data.languages;
+        singleSeries.lastEpisodeToAir = data.last_episode_to_air;
+        singleSeries.name = data.name;
+        singleSeries.nextEpisodeToAir = data.next_episode_to_air;
+        singleSeries.networks = data.networks;
+        singleSeries.numberOfEpisodes = data.number_of_episodes;
+        singleSeries.numberOfSeasons = data.number_of_seasons;
+        singleSeries.originOfCountry = data.origin_of_country;
+        singleSeries.originalLanguage = data.original_language;
+        singleSeries.originalName = data.original_name;
+        singleSeries.overview = data.overview;
+        singleSeries.popularity = data.popularity;
+        singleSeries.posterPath = data.poster_path ? `http://image.tmdb.org/t/p/w342/${data.poster_path}` : 'https://vignette.wikia.nocookie.net/undertale-rho/images/5/5f/Placeholder.jpg/revision/latest?cb=20180213155916';
+        singleSeries.productionCompanies = data.production_companies;
+        singleSeries.seasons = data.seasons;
+        singleSeries.status = data.status;
+        singleSeries.type = data.type;
+        singleSeries.voteAverage = data.vote_average;
+        singleSeries.voteCount = data.vote_count;
+
+        return singleSeries;
 
     }
 
-    public getValidMovie(latestMovieId: number): Observable<SingleShowType> {
+    mapSingleShowType(data: any): SingleShowType {
+        const singleShow: SingleShowType = new SingleShowType();
+
+        singleShow.id = data.id;
+        singleShow.title = data.title || data.name;
+        singleShow.posterPath = data.posterPath;
+        singleShow.overview = data.overview;
+        singleShow.tagline = data.tagline || '';
+
+        return singleShow;
+    }
+
+    public getValidMovie(latestMovieId: number): Observable<SingleMovieType> {
         let singleShowId: number;
         singleShowId = this.randomNumberBetween(0, latestMovieId);
         return this.getSingleMovie(singleShowId)
             .pipe(
                 map((data) => {
                     if (data) {
-                        return {
-                            id : singleShowId,
-                            isMovie : true
-                        };
+                        return data;
                     }
                 }), catchError((error) => {
                     if (error.status === 404) {
@@ -124,21 +132,18 @@ export class SingleShowService {
             );
     }
 
-    public getValidSeries(latestMovieId: number): Observable<SingleShowType> {
+    public getValidSeries(latestSeriesId: number): Observable<SingleSeriesType> {
         let singleShowId: number;
-        singleShowId = this.randomNumberBetween(0, latestMovieId);
+        singleShowId = this.randomNumberBetween(0, latestSeriesId);
         return this.getSingleTv(singleShowId)
             .pipe(
                 map((data) => {
                     if (data) {
-                        return {
-                            id : singleShowId,
-                            isMovie : false
-                        };
+                        return data;
                     }
                 }), catchError((error) => {
                     if (error.status === 404) {
-                        return this.getValidMovie(latestMovieId);
+                        return this.getValidSeries(latestSeriesId);
                     }
 
                     return null;
@@ -148,6 +153,30 @@ export class SingleShowService {
 
     public randomNumberBetween(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    public getShows(numberOfMovies, latestMovieId, latestSeriesId): Observable<Array<SingleShowType>> {
+        const shows: Array<SingleShowType> = [];
+        const calls = [];
+
+        for (let i = 0; i < AppConstants.NUMBER_OF_SHOWS; i++) {
+            if (i < numberOfMovies) {
+                calls.push(this.getValidMovie(latestMovieId));
+            } else {
+                calls.push(this.getValidSeries(latestSeriesId));
+            }
+        }
+        return forkJoin(...calls).pipe(
+            map((data) => {
+                if (data !== null) {
+                    data = data.map( e => {
+                        return this.mapSingleShowType(e);
+                    });
+                    shows.push(...data);
+                }
+                return shows;
+            })
+        );
     }
 }
 
