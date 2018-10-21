@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {SingleMovieType} from './single-show/single-movie.type';
 import {AppConstants} from '../app.consts';
 import {map, tap} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {SingleShowService} from './single-show/single-show.service';
 import {SingleSeriesType} from './single-show/single-series.type';
+import {SingleShowType} from './single-show/single-show.type';
 
 @Injectable()
 export class RandomShowGenerateService {
@@ -17,17 +18,27 @@ export class RandomShowGenerateService {
         this._singleShowService = singleShowService;
     }
 
-    public getLatestMovie(): Observable<SingleMovieType> {
-        return this._httpClient.get(`https://api.themoviedb.org/3/movie/latest?api_key=${AppConstants.API_KEY}`).pipe(
-            map((response) => this._singleShowService.mapSingleMovie(response)
-            )
-        );
-    }
+    public getShows(numberOfMovies, latestMovieId, latestSeriesId): Observable<Array<SingleShowType>> {
+        const shows: Array<SingleShowType> = [];
+        const calls = [];
 
-    public getLatestTv(): Observable<SingleSeriesType> {
-        return this._httpClient.get(`https://api.themoviedb.org/3/tv/latest?api_key=${AppConstants.API_KEY}`).pipe(
-            map((response) => this._singleShowService.mapSingleSeries(response)
-            )
+        for (let i = 0; i < AppConstants.NUMBER_OF_SHOWS; i++) {
+            if (i < numberOfMovies) {
+                calls.push(this._singleShowService.getValidMovie(latestMovieId));
+            } else {
+                calls.push(this._singleShowService.getValidSeries(latestSeriesId));
+            }
+        }
+        return forkJoin(...calls).pipe(
+            map((data) => {
+                if (data !== null) {
+                    data = data.map( e => {
+                        return this._singleShowService.mapSingleShowType(e);
+                    });
+                    shows.push(...data);
+                }
+                return shows;
+            })
         );
     }
 }

@@ -1,11 +1,21 @@
 <h1>Filter by...</h1>
 <div class="pt-2">
     <div class="form-group">
-        <label for="show-type-selector"><h5>Show type (Movie/TV)</h5></label>
-        <select class="form-control" id="show-type-selector">
-            <option value="show-selector-movie">Movie</option>
-            <option value="show-selector-tv">TV</option>
-        </select>
+        <h5>Show type (Movie/TV)</h5>
+        <form [formGroup]="filterForm" class="form-check">
+            <div class="col-3">
+                <input class="form-check-input"  type="checkbox" value="" id="movieCheck" formControlName="movieCheck">
+                <label class="form-check-label" for="defaultCheck1">
+                    Movie
+                </label>
+            </div>
+            <div class="col-3">
+                <input class="form-check-input" type="checkbox" value="" id="tvCheck" formControlName="tvCheck">
+                <label class="form-check-label" for="defaultCheck1">
+                    Tv
+                </label>
+            </div>
+        </form>
 
         <label for="rating-selector" class="mt-3"><h5>IMDB Rating (1-10)</h5></label>
         <select class="form-control" id="rating-selector">

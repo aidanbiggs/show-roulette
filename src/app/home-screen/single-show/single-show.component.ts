@@ -21,13 +21,13 @@ export class SingleShowComponent implements OnInit {
     }
 
     ngOnInit() {
-        const latestMovie = this._randomShowGenerateService.getLatestMovie().pipe(
+        const latestMovie = this._singleShowService.getLatestMovie().pipe(
             mergeMap((value) => {
                 return this._singleShowService.getSingleMovie(value.id);
             })
         );
 
-        const latestSeries = this._randomShowGenerateService.getLatestTv().pipe(
+        const latestSeries = this._singleShowService.getLatestTv().pipe(
             mergeMap((value) => {
                 return this._singleShowService.getSingleTv(value.id);
             })
@@ -38,7 +38,7 @@ export class SingleShowComponent implements OnInit {
             const latestSeriesId = results[1].id;
             const numberOfMovies = this.randomNumberBetween(0, 10);
 
-            this._singleShowService.getShows(numberOfMovies, latestMovieId, latestSeriesId).pipe(map((result) => {
+            this._randomShowGenerateService.getShows(numberOfMovies, latestMovieId, latestSeriesId).pipe(map((result) => {
                 this.shows = result;
             })).subscribe();
         });

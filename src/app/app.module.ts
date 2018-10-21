@@ -1,28 +1,21 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-
-import { AppComponent } from './app.component';
-import { HomeScreenComponent } from './home-screen/home-screen.component';
-import { HttpClientModule } from '@angular/common/http';
-import { SingleShowModule } from './home-screen/single-show/single-show.module';
-import { FilterShowsComponent } from './home-screen/filter-shows/filter-shows.component';
-import { ShowSpinnerComponent } from './home-screen/show-spinner/show-spinner.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {AppComponent} from './app.component';
+import {HttpClientModule} from '@angular/common/http';
 import {RandomShowGenerateService} from './home-screen/random-show-generate.service';
+import {HomeScreenModule} from './home-screen/home-screen.module';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeScreenComponent,
-    FilterShowsComponent,
-    ShowSpinnerComponent,
-
-  ],
-  imports: [
-      BrowserModule,
-      HttpClientModule,
-      SingleShowModule
-  ],
-  providers: [RandomShowGenerateService],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        HomeScreenModule,
+    ],
+    providers: [RandomShowGenerateService],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

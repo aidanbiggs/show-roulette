@@ -155,27 +155,17 @@ export class SingleShowService {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    public getShows(numberOfMovies, latestMovieId, latestSeriesId): Observable<Array<SingleShowType>> {
-        const shows: Array<SingleShowType> = [];
-        const calls = [];
+    public getLatestMovie(): Observable<SingleMovieType> {
+        return this._httpClient.get(`https://api.themoviedb.org/3/movie/latest?api_key=${AppConstants.API_KEY}`).pipe(
+            map((response) => this.mapSingleMovie(response)
+            )
+        );
+    }
 
-        for (let i = 0; i < AppConstants.NUMBER_OF_SHOWS; i++) {
-            if (i < numberOfMovies) {
-                calls.push(this.getValidMovie(latestMovieId));
-            } else {
-                calls.push(this.getValidSeries(latestSeriesId));
-            }
-        }
-        return forkJoin(...calls).pipe(
-            map((data) => {
-                if (data !== null) {
-                    data = data.map( e => {
-                        return this.mapSingleShowType(e);
-                    });
-                    shows.push(...data);
-                }
-                return shows;
-            })
+    public getLatestTv(): Observable<SingleSeriesType> {
+        return this._httpClient.get(`https://api.themoviedb.org/3/tv/latest?api_key=${AppConstants.API_KEY}`).pipe(
+            map((response) => this.mapSingleSeries(response)
+            )
         );
     }
 }
