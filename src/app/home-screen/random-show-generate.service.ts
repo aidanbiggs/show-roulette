@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
-import {SingleMovieType} from './single-show/single-movie.type';
 import {AppConstants} from '../app.consts';
-import {map, tap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {SingleShowService} from './single-show/single-show.service';
-import {SingleSeriesType} from './single-show/single-series.type';
 import {SingleShowType} from './single-show/single-show.type';
 
 @Injectable()

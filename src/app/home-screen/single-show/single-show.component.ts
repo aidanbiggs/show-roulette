@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {SingleShowService} from './single-show.service';
 import {RandomShowGenerateService} from '../random-show-generate.service';
-import {map, mergeMap} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 import {SingleShowType} from './single-show.type';
+import {AppConstants} from '../../app.consts';
 
 @Component({
     selector: 'app-single-show',
@@ -21,22 +22,17 @@ export class SingleShowComponent implements OnInit {
     }
 
     ngOnInit() {
-        const latestMovie = this._singleShowService.getLatestMovie().pipe(
-            mergeMap((value) => {
-                return this._singleShowService.getSingleMovie(value.id);
-            })
-        );
+    }
 
-        const latestSeries = this._singleShowService.getLatestTv().pipe(
-            mergeMap((value) => {
-                return this._singleShowService.getSingleTv(value.id);
-            })
-        );
+    public populateShows(formValue: any) {
+        const numberOfMovies = this.getNumberOfMoviesFromFilter(formValue);
+        const latestMovie = this._singleShowService.getLatestMovie();
+        const latestSeries = this._singleShowService.getLatestTv();
 
         forkJoin([latestMovie, latestSeries]).subscribe(results => {
             const latestMovieId = results[0].id;
             const latestSeriesId = results[1].id;
-            const numberOfMovies = this.randomNumberBetween(0, 10);
+
 
             this._randomShowGenerateService.getShows(numberOfMovies, latestMovieId, latestSeriesId).pipe(map((result) => {
                 this.shows = result;
@@ -44,8 +40,23 @@ export class SingleShowComponent implements OnInit {
         });
     }
 
+    private getNumberOfMoviesFromFilter(formValue: any) {
+        let numberOfMovies: number;
 
-    public randomNumberBetween(min, max) {
+        if (formValue.movieCheck && formValue.tvCheck) {
+            numberOfMovies = this.randomNumberBetween(0, AppConstants.NUMBER_OF_SHOWS);
+        } else if (formValue.movieCheck) {
+            numberOfMovies = AppConstants.NUMBER_OF_SHOWS;
+        } else if (formValue.tvCheck) {
+            numberOfMovies = 0;
+        } else {
+            numberOfMovies = this.randomNumberBetween(0, AppConstants.NUMBER_OF_SHOWS);
+        }
+
+        return numberOfMovies;
+    }
+
+    private randomNumberBetween(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }

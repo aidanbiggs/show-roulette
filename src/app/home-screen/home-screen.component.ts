@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
 import {FilterShowsComponent} from './filter-shows/filter-shows.component';
+import {SingleShowComponent} from './single-show/single-show.component';
 
 @Component({
   selector: 'app-home-screen',
@@ -10,6 +11,7 @@ import {FilterShowsComponent} from './filter-shows/filter-shows.component';
 
 export class HomeScreenComponent implements OnInit {
     @ViewChild(FilterShowsComponent) filterShowsComponent: FilterShowsComponent;
+    @ViewChild(SingleShowComponent) singleShowComponent: SingleShowComponent;
 
   constructor() {
   }
@@ -18,8 +20,7 @@ export class HomeScreenComponent implements OnInit {
   }
 
   public onSpinButtonClicked() {
-      console.log(this.filterShowsComponent.filterForm.value);
-      console.log('hello');
+      this.singleShowComponent.populateShows(this.filterShowsComponent.filterForm.value);
   }
 
 }

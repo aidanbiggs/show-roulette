@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, forkJoin} from 'rxjs';
+import {Observable} from 'rxjs';
 import {SingleMovieType} from './single-movie.type';
 import {catchError, map} from 'rxjs/operators';
 import {AppConstants} from '../../app.consts';
