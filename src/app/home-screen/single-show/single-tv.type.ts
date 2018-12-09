@@ -1,0 +1,29 @@
+export class SingleTvType {
+    backdropPath: string;
+    createdBy: [string];
+    episodeRunTime: [number];
+    firstAirDate: [string];
+    genres: [string];
+    homepage: string;
+    id: number;
+    inProduction: boolean;
+    languages: string;
+    lastEpisodeToAir: {};
+    name: string;
+    nextEpisodeToAir: {};
+    networks: {};
+    numberOfEpisodes: number;
+    numberOfSeasons: number;
+    originOfCountry: [string];
+    originalLanguage: [string];
+    originalName: string;
+    overview: string;
+    popularity: number;
+    posterPath: string;
+    productionCompanies: [string];
+    seasons: [string];
+    status: string;
+    type: string;
+    voteAverage: number;
+    voteCount: number;
+}

@@ -2,9 +2,9 @@
 <div class="pt-2">
     <div class="form-group">
         <h5>Show type (Movie/TV)</h5>
-        <form [formGroup]="filterForm" class="form-check">
+        <form [formGroup]="showTypeForm" class="form-check">
             <div class="col-3">
-                <input class="form-check-input"  type="checkbox" value="" id="movieCheck" formControlName="movieCheck">
+                <input class="form-check-input" type="checkbox" value="" id="movieCheck" formControlName="movieCheck">
                 <label class="form-check-label" for="defaultCheck1">
                     Movie
                 </label>
@@ -47,4 +47,42 @@
             </label>
         </div>
     </div>
+
+    <button class="btn btn-dark my-3" (click)="toggleAdditionalFilters()">Show/Hide Additional Filters</button>
+
+</div>
+
+
+<div *ngIf="toggleFilters">
+
+    <div class="column">
+        <h3>Genres</h3>
+        <button class="btn btn-dark my-3" (click)="toggleGenres()">Show/Hide Genres</button>
+        <div *ngIf="toggleGenreSection">
+            <form [formGroup]="genreForm" class="form-check">
+                <div *ngFor="let genre of genresArray">
+                    <label [for]="genre.id">
+                        <input type="checkbox" formControlName="{{genre.id}}">
+                        {{genre.name}}
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="column">
+        <h3>Languages</h3>
+        <button class="btn btn-dark my-3" (click)="toggleLanguages()">Show/Hide Languages</button>
+        <div *ngIf="toggleLanguageSection">
+            <form [formGroup]="languageForm" class="form-check">
+                <div *ngFor="let language of languagesArray">
+                    <label [for]="language">
+                        <input type="checkbox" formControlName="{{language}}">
+                        {{language}}
+                    </label>
+                </div>
+            </form>
+        </div>
+    </div>
+
 </div>
