@@ -3,8 +3,8 @@ import {AppConstants} from '../app.consts';
 import {map} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {SingleShowService} from './single-show/single-show.service';
 import {SingleShowType} from './single-show/single-show.type';
+import {SingleShowService} from './single-show/single-show.service';
 
 @Injectable()
 export class RandomShowGenerateService {

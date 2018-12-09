@@ -1,12 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {SingleMovieType} from './single-movie.type';
 import {catchError, map} from 'rxjs/operators';
+import {SingleMovieType} from './single-movie.type';
 import {AppConstants} from '../../app.consts';
 import {SingleSeriesType} from './single-series.type';
-import 'rxjs-compat/add/observable/of';
-import 'rxjs/add/operator/catch';
 import {SingleShowType} from './single-show.type';
 
 @Injectable({
@@ -169,4 +167,3 @@ export class SingleShowService {
         );
     }
 }
-

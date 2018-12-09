@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {SingleShowService} from './single-show.service';
+import {NumberGeneratorService} from '../../shared/number-generator.service';
 import {RandomShowGenerateService} from '../random-show-generate.service';
 import {map} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 import {SingleShowType} from './single-show.type';
 import {AppConstants} from '../../app.consts';
+import {SingleShowService} from './single-show.service';
 
 @Component({
     selector: 'app-single-show',
@@ -15,10 +16,12 @@ export class SingleShowComponent implements OnInit {
     public shows: Array<SingleShowType>;
     private _singleShowService: SingleShowService;
     private _randomShowGenerateService: RandomShowGenerateService;
+    private _numberGeneratorService: NumberGeneratorService;
 
-    constructor(singleShowService: SingleShowService, randomShowGenerateService: RandomShowGenerateService) {
+    constructor(singleShowService: SingleShowService, randomShowGenerateService: RandomShowGenerateService, numberGeneratorService: NumberGeneratorService) {
         this._singleShowService = singleShowService;
         this._randomShowGenerateService = randomShowGenerateService;
+        this._numberGeneratorService = numberGeneratorService;
     }
 
     ngOnInit() {
@@ -44,19 +47,15 @@ export class SingleShowComponent implements OnInit {
         let numberOfMovies: number;
 
         if (formValue.movieCheck && formValue.tvCheck) {
-            numberOfMovies = this.randomNumberBetween(0, AppConstants.NUMBER_OF_SHOWS);
+            numberOfMovies = this._numberGeneratorService.randomNumberBetween(0, AppConstants.NUMBER_OF_SHOWS);
         } else if (formValue.movieCheck) {
             numberOfMovies = AppConstants.NUMBER_OF_SHOWS;
         } else if (formValue.tvCheck) {
             numberOfMovies = 0;
         } else {
-            numberOfMovies = this.randomNumberBetween(0, AppConstants.NUMBER_OF_SHOWS);
+            numberOfMovies = this._numberGeneratorService.randomNumberBetween(0, AppConstants.NUMBER_OF_SHOWS);
         }
 
         return numberOfMovies;
-    }
-
-    private randomNumberBetween(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 }
